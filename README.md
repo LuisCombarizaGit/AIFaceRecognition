@@ -1,1 +1,1 @@
-# AIVisualRecognition
+# AIFaceRecognition
