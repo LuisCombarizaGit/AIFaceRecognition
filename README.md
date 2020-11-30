@@ -1,2 +1,2 @@
 # AIFaceRecognition
-![](./FaceRecogPic.jpg)
+![](./FaceRecogPicOne.jpg)
