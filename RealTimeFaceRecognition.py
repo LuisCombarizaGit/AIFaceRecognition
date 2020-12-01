@@ -34,22 +34,40 @@ def findEncodings(images):
 encodeListKnown = findEncodings(images)
 print('Encoding Complete')
 
-# # Initialize web cam:
-# cap = cv2.VideoCapture(0)
-#
-# while True:
-#     success, img = cap.read()
-#     imgS = cv2.resize(img,(0,0),None,0.25,0.25)
-#     imgS = cv2.cvtColor(imgS, cv2.COLOR_BGR2RGB)
-#
-#     facesCurFrame = face_recognition.face_locations(imgS)
-#     encodesCurFrame = face_recognition.face_encodings(imgS, facesCurFrame)
-#
-#     # Grav a single face location and its encode
-#     for encodeFace, faceLoc in zip(encodesCurFrame, facesCurFrame):
-#         matches = face_recognition.compare_faces(encodeListKnown, encodeFace)
-#         faceDis = face_recognition.face_distance(encodeListKnown, encodeFace)
-#         print(faceDis)
+# Initialize web cam:
+cap = cv2.VideoCapture(0)
+
+while True:
+    success, img = cap.read()
+    imgS = cv2.resize(img,(0,0),None,0.25,0.25)
+    imgS = cv2.cvtColor(imgS, cv2.COLOR_BGR2RGB)
+
+    facesCurFrame = face_recognition.face_locations(imgS)
+    encodesCurFrame = face_recognition.face_encodings(imgS, facesCurFrame)
+
+    # Grav a single face location and its encode
+    for encodeFace, faceLoc in zip(encodesCurFrame, facesCurFrame):
+        matches = face_recognition.compare_faces(encodeListKnown, encodeFace)
+        faceDis = face_recognition.face_distance(encodeListKnown, encodeFace)
+        print(faceDis)
+        matchIndex = np.argmin(faceDis)
+
+
+        if matches[matchIndex]:
+            name = classNames[matchIndex]
+            print(name)
+            y1,x2,y2,x1 = faceLoc
+            # Upscale the picture
+            y1, x2, y2, x1 =y1*4,x2*4,y2*4,x1*4
+
+            # Rectangle around image
+            cv2.rectangle(img,(x1,y1),(x2,y2),(255,0,0),2)
+            cv2.rectangle(img,(x1,y2-35),(x2,y2),(255,0,0),cv2.FILLED)
+            cv2.putText(img,name,(x1+6, y2-6),cv2.FONT_HERSHEY_PLAIN,1,(255,255,255),2)
+
+    # Open web cam and show
+    cv2.imshow('webcam', img)
+    cv2.waitKey(1)
 
 # Check the given picture for face recognition
 # faceLoc = face_recognition.face_locations(imgElon)[0]
